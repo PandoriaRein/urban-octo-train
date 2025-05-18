@@ -22,8 +22,14 @@ namespace CryptoGuard {
     {
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc_), vm);
+
         po::notify(vm);  
+        
         if (vm.count("help")) {
+            std::cout << desc_ << "\n";
+            return;
+        }
+        if (vm.count("i")) {
             std::cout << desc_ << "\n";
             return;
         }

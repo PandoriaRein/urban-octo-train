@@ -7,7 +7,7 @@ namespace ProgramOptions
 
         EXPECT_NO_THROW({
             CryptoGuard::ProgramOptions programOpt;
-            char *argv = "help1 123";
+            char *argv = "help 123";
             programOpt.Parse(2,&argv);
         });
     }
@@ -17,11 +17,30 @@ namespace ProgramOptions
         
         EXPECT_NO_THROW({
             CryptoGuard::ProgramOptions programOpt;
-            char *argv = "help1 123";
+            char *argv = "command 123";
             programOpt.Parse(2,&argv);
         });
-    }//по какой-то причине тесты не запускаются
+    }
     
+    TEST(ProgramOptions, TestName3){ 
+        
+        
+        EXPECT_THROW({
+            CryptoGuard::ProgramOptions programOpt;
+            char *argv = "help 123";
+            programOpt.Parse(6,&argv);
+        },std::logic_error);
+    }
+
+    TEST(ProgramOptions, TestName4){ 
+        
+        
+        EXPECT_THROW({
+            CryptoGuard::ProgramOptions programOpt;
+            char *argv = "help 123";
+            programOpt.Parse(6,&argv);
+        },std::logic_error);
+    }
 
 
 }

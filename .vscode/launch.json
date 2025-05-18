@@ -8,15 +8,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Launch CryptoGuard",
+            "name": "Launch CryptoGuard Help",
             "program": "${workspaceFolder}/build/CryptoGuard",
             "args": [
-                "-i",
-                "input.txt",
-                "--command",
-                "checksum"
+                "help"
+                //"input.txt",
+                //"--command",
+                //"checksum"
             ],
-            "cwd": "${workspaceFolder}/build"
+            "cwd": "${workspaceFolder}/build",
+            "preLaunchTask": "myShellCommand"
         },
         {
             "type": "lldb",

@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "myShellCommand",
+      "label": "buildProgram",
       "type": "shell",
       "command": "conan build  --settings=build_type=Debug ${workspaceFolder}"
     }

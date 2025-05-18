@@ -3,7 +3,6 @@
 #include <string>
 
 namespace CryptoGuard {
-
 class CryptoGuardCtx {
 public:
   CryptoGuardCtx() {}
@@ -17,12 +16,10 @@ public:
 
   // API
   void EncryptFile(std::iostream &inStream, std::iostream &outStream,
-                   std::string_view password) {}
+                   std::string_view password);
   void DecryptFile(std::iostream &inStream, std::iostream &outStream,
-                   std::string_view password) {}
-  std::string CalculateChecksum(std::iostream &inStream) {
-    return "NOT_IMPLEMENTED";
-  }
+                   std::string_view password);
+  std::string CalculateChecksum(std::iostream &inStream);
 
 private:
   class Impl;

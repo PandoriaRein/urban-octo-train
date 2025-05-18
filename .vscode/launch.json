@@ -55,11 +55,24 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Launch CryptoGuard full ",
+            "program": "${workspaceFolder}/build/CryptoGuard",
+            "args": [
+                "--i",
+                "input.txt",
+                "--o",
+                "output.txt",
+                "--command",
+                "encrypt",
+            ],
+            "cwd": "${workspaceFolder}/build",
+            "preLaunchTask": "buildProgram"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Launch CryptoGuard_tests",
             "program": "${workspaceFolder}/build/CryptoGuard_tests",
-            "args": [
-                "help1 123"
-            ],
             "cwd": "${workspaceFolder}/build"
         }
 

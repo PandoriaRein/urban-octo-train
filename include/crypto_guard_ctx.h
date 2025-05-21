@@ -1,8 +1,31 @@
 #pragma once
 
 #include <string>
+#include <array>
+#include <string>
+#include <openssl/evp.h>
+#include <stdexcept>
+#include <memory>
 
 namespace CryptoGuard {
+struct AesCipherParams;
+ class Impl {
+  public:
+    Impl();
+
+    ~Impl();
+
+    AesCipherParams CreateChiperParamsFromPassword(std::string_view password);
+
+  void EncryptFile(std::iostream &inStream, std::iostream &outStream,
+                   std::string_view password);
+  void DecryptFile(std::iostream &inStream, std::iostream &outStream,
+                   std::string_view password);
+  std::string CalculateChecksum(std::iostream &inStream);
+  private:
+  EVP_CIPHER_CTX *ctx;
+ };
+
 class CryptoGuardCtx {
 public:
   CryptoGuardCtx() {}
@@ -22,8 +45,7 @@ public:
   std::string CalculateChecksum(std::iostream &inStream);
 
 private:
-  class Impl;
-  Impl *pImpl_;
+  std::unique_ptr<Impl*> pImpl_;
 };
 
 } // namespace CryptoGuard

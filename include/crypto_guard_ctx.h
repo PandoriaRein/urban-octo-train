@@ -1,10 +1,8 @@
 #pragma once
 
 #include <string>
-#include <array>
 #include <string>
 #include <openssl/evp.h>
-#include <stdexcept>
 #include <memory>
 
 namespace CryptoGuard {
@@ -24,6 +22,7 @@ struct AesCipherParams;
   std::string CalculateChecksum(std::iostream &inStream);
   private:
   EVP_CIPHER_CTX *ctx;
+  AesCipherParams* params;
  };
 
 class CryptoGuardCtx {
@@ -45,7 +44,7 @@ public:
   std::string CalculateChecksum(std::iostream &inStream);
 
 private:
-  std::unique_ptr<Impl*> pImpl_;
+  std::unique_ptr<Impl> pImpl_;
 };
 
 } // namespace CryptoGuard

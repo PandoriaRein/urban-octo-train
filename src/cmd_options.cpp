@@ -1,6 +1,5 @@
 #include "cmd_options.h"
 
-#include <cstddef>
 #include <iostream>
 
 namespace po = boost::program_options;

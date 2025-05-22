@@ -19,43 +19,7 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Launch CryptoGuard input file",
-            "program": "${workspaceFolder}/build/CryptoGuard",
-            "args": [
-                "--i",
-                "input.txt",
-            ],
-            "cwd": "${workspaceFolder}/build",
-            "preLaunchTask": "buildProgram"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Launch CryptoGuard output file",
-            "program": "${workspaceFolder}/build/CryptoGuard",
-            "args": [
-                "--o",
-                "output.txt",
-            ],
-            "cwd": "${workspaceFolder}/build",
-            "preLaunchTask": "buildProgram"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Launch CryptoGuard command ",
-            "program": "${workspaceFolder}/build/CryptoGuard",
-            "args": [
-                "--command",
-                "encrypt",
-            ],
-            "cwd": "${workspaceFolder}/build",
-            "preLaunchTask": "buildProgram"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Launch CryptoGuard full ",
+            "name": "Launch CryptoGuard encrypt",
             "program": "${workspaceFolder}/build/CryptoGuard",
             "args": [
                 "--i",
@@ -64,6 +28,26 @@
                 "output.txt",
                 "--command",
                 "encrypt",
+                "--p",
+                "1234"
+            ],
+            "cwd": "${workspaceFolder}/build",
+            "preLaunchTask": "buildProgram"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch CryptoGuard decrypt",
+            "program": "${workspaceFolder}/build/CryptoGuard",
+            "args": [
+                "--i",
+                "output.txt",
+                "--o",
+                "input2.txt",
+                "--command",
+                "decrypt",
+                "--p",
+                "1234"
             ],
             "cwd": "${workspaceFolder}/build",
             "preLaunchTask": "buildProgram"

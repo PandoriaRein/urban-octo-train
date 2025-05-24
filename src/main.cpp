@@ -4,6 +4,7 @@
 #include <iostream>
 #include <print>
 #include <stdexcept>
+#include <string>
 
 int main(int argc, char *argv[]) {
   try {
@@ -22,14 +23,16 @@ int main(int argc, char *argv[]) {
     if (!outStreamF.good()) {
       throw std::runtime_error{"Output file was not found"};
     }
-    std::stringstream inputStream;
+    std::string tmpStr;
+    std::string tmpStr2;
     while (!inStreamF.eof()) {
-
-      std::string tmpStr;
       inStreamF >> tmpStr;
-      tmpStr += " ";
-      inputStream << tmpStr;
+      if (tmpStr != "") {
+        tmpStr2 += tmpStr + " ";
+      }
     }
+    tmpStr2.erase(tmpStr2.size() - 1);
+    std::stringstream inputStream(tmpStr2);
     std::stringstream outputStream;
 
     using COMMAND_TYPE = CryptoGuard::ProgramOptions::COMMAND_TYPE;

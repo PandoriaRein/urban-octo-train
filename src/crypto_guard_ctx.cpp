@@ -57,32 +57,6 @@ public:
     Cipher(inStream, outStream);
     return;
   }
-
-  void Cipher(std::iostream &inStream, std::iostream &outStream) {
-    EVP_CipherInit_ex(ctx, params->cipher, nullptr, params->key.data(),
-                      params->iv.data(), params->encrypt);
-    while (!inStream.eof()) {
-      std::string tmpIn;
-      inStream >> tmpIn;
-      std::vector<unsigned char> inBuf(tmpIn.begin(), tmpIn.end());
-      std::vector<unsigned char> outBuf(inBuf.size());
-      int outLen = outBuf.size();
-      if (!inStream.good() || !outStream.good()) {
-        if (inStream.eof() || outStream.eof()) {
-          EVP_CipherFinal_ex(ctx, outBuf.data(), &outLen);
-          outStream << outBuf.data();
-          return;
-        } else {
-          throw std::runtime_error{"Problem with streams.\n"};
-          return;
-        }
-      }
-      EVP_CipherUpdate(ctx, outBuf.data(), &outLen, inBuf.data(),
-                       static_cast<int>(inBuf.size()));
-      outStream << outBuf.data();
-    }
-  }
-
   void DecryptFile(std::iostream &inStream, std::iostream &outStream,
                    std::string_view password) {
     if (!inStream.good() || !outStream.good()) {
@@ -90,7 +64,38 @@ public:
       return;
     }
     params = new AesCipherParams(CreateChiperParamsFromPassword(password));
+    params->encrypt = 0;
     Cipher(inStream, outStream);
+  }
+  void Cipher(std::iostream &inStream, std::iostream &outStream) {
+    int outLen;
+    EVP_CipherInit_ex(ctx, params->cipher, nullptr, params->key.data(),
+                      params->iv.data(), params->encrypt);
+    while (!inStream.eof()) {
+      std::string tmpIn;
+      inStream >> tmpIn;
+      std::vector<unsigned char> inBuf(tmpIn.begin(), tmpIn.end());
+      std::vector<unsigned char> outBuf(inBuf.size() + EVP_MAX_BLOCK_LENGTH);
+
+      EVP_CipherUpdate(ctx, outBuf.data(), &outLen, inBuf.data(),
+                       static_cast<int>(inBuf.size()));
+      for (int i = 0; i < outLen; i++) {
+        outStream << outBuf[i];
+      }
+      outStream << " ";
+    }
+    std::vector<unsigned char> outBuf(16 + EVP_MAX_BLOCK_LENGTH);
+
+    EVP_CipherFinal_ex(ctx, outBuf.data(), &outLen);
+    if (outBuf[0] == -1) {
+      int x = 1;
+    }
+    for (int i = 0; i < outLen; i++) {
+      outStream << outBuf[i];
+    }
+
+    // throw std::runtime_error{"Problem with streams.\n"};
+    return;
   }
 
   std::string CalculateChecksum(std::iostream &inStream) {

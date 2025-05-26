@@ -73,11 +73,13 @@ public:
     int outLen;
     EVP_CipherInit_ex(ctx, params->cipher, nullptr, params->key.data(),
                       params->iv.data(), params->encrypt);
+
     while (!inStream.eof()) {
       std::string tmpIn;
       inStream >> tmpIn;
-      std::vector<unsigned char> inBuf(tmpIn.begin(), tmpIn.end());
-      int x = static_cast<int>(inBuf.size());
+      std::vector<unsigned char> inBuf(16);
+      std::copy(tmpIn.begin(), std::next(tmpIn.begin(), tmpIn.size()),
+                inBuf.begin());
       std::vector<unsigned char> outBuf(inBuf.size() + EVP_MAX_BLOCK_LENGTH);
 
       EVP_CipherUpdate(ctx, outBuf.data(), &outLen, inBuf.data(),
@@ -85,7 +87,9 @@ public:
       for (int i = 0; i < outLen; i++) {
         outStream << outBuf[i];
       }
-      outStream << " ";
+      if (!inStream.eof()) {
+        outStream << " ";
+      }
     }
     std::vector<unsigned char> outBuf(16 + EVP_MAX_BLOCK_LENGTH);
 

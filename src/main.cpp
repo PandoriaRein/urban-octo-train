@@ -19,10 +19,6 @@ int main(int argc, char *argv[]) {
       throw std::runtime_error{"Input file was not found"};
     }
 
-    std::ofstream outStreamF(options.GetOutputFile(), std::ios::binary);
-    if (!outStreamF.good()) {
-      throw std::runtime_error{"Output file was not found"};
-    }
     std::string tmpStr;
     std::string tmpStr2;
     while (!inStreamF.eof()) {
@@ -34,22 +30,37 @@ int main(int argc, char *argv[]) {
     tmpStr2.erase(tmpStr2.size() - 1);
     std::stringstream inputStream(tmpStr2);
     std::stringstream outputStream;
+    std::string res;
 
     using COMMAND_TYPE = CryptoGuard::ProgramOptions::COMMAND_TYPE;
     switch (options.GetCommand()) {
-    case COMMAND_TYPE::ENCRYPT:
+    case COMMAND_TYPE::ENCRYPT: {
+      std::ofstream outStreamF(options.GetOutputFile(), std::ios::binary);
+      if (!outStreamF.good()) {
+        throw std::runtime_error{"Output file was not found"};
+      }
       cryptoCtx.EncryptFile(inputStream, outputStream, options.GetPassword());
-      while (!outputStream.eof())
+      while (!outputStream.eof()) {
         outStreamF << outputStream.get();
+      }
+      outStreamF.close();
       std::print("File encoded successfully\n");
       break;
+    }
 
-    case COMMAND_TYPE::DECRYPT:
+    case COMMAND_TYPE::DECRYPT: {
+      std::ofstream outStreamF(options.GetOutputFile(), std::ios::binary);
+      if (!outStreamF.good()) {
+        throw std::runtime_error{"Output file was not found"};
+      }
       cryptoCtx.DecryptFile(inputStream, outputStream, options.GetPassword());
-      while (!outputStream.eof())
+      while (!outputStream.eof()) {
         outStreamF << outputStream.get();
+      }
+      outStreamF.close();
       std::print("File decoded successfully\n");
       break;
+    }
 
     case COMMAND_TYPE::CHECKSUM:
       std::print("Checksum: {}\n", "CHECKSUM_NOT_IMPLEMENTED");

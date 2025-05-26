@@ -8,7 +8,7 @@
 namespace CryptoGuard {
 struct AesCipherParams {
   static const size_t KEY_SIZE = 32;            // AES-256 key size
-  static const size_t IV_SIZE = 32;             // AES block size (IV length)
+  static const size_t IV_SIZE = 16;             // AES block size (IV length)
   const EVP_CIPHER *cipher = EVP_aes_256_cbc(); // Cipher algorithm
 
   int encrypt;                             // 1 for encryption, 0 for decryption
@@ -57,6 +57,7 @@ public:
     Cipher(inStream, outStream);
     return;
   }
+
   void DecryptFile(std::iostream &inStream, std::iostream &outStream,
                    std::string_view password) {
     if (!inStream.good() || !outStream.good()) {
@@ -67,6 +68,7 @@ public:
     params->encrypt = 0;
     Cipher(inStream, outStream);
   }
+
   void Cipher(std::iostream &inStream, std::iostream &outStream) {
     int outLen;
     EVP_CipherInit_ex(ctx, params->cipher, nullptr, params->key.data(),
@@ -75,6 +77,7 @@ public:
       std::string tmpIn;
       inStream >> tmpIn;
       std::vector<unsigned char> inBuf(tmpIn.begin(), tmpIn.end());
+      int x = static_cast<int>(inBuf.size());
       std::vector<unsigned char> outBuf(inBuf.size() + EVP_MAX_BLOCK_LENGTH);
 
       EVP_CipherUpdate(ctx, outBuf.data(), &outLen, inBuf.data(),
@@ -87,9 +90,7 @@ public:
     std::vector<unsigned char> outBuf(16 + EVP_MAX_BLOCK_LENGTH);
 
     EVP_CipherFinal_ex(ctx, outBuf.data(), &outLen);
-    if (outBuf[0] == -1) {
-      int x = 1;
-    }
+
     for (int i = 0; i < outLen; i++) {
       outStream << outBuf[i];
     }
@@ -125,8 +126,6 @@ void CryptoGuardCtx::DecryptFile(std::iostream &inStream,
 std::string CryptoGuardCtx::CalculateChecksum(std::iostream &inStream) {
   return pImpl_->CalculateChecksum(inStream);
 }
-CryptoGuardCtx::CryptoGuardCtx() : pImpl_() {
-  pImpl_ = std::make_unique<Impl>();
-}
+CryptoGuardCtx::CryptoGuardCtx() { pImpl_ = std::make_unique<Impl>(); }
 CryptoGuardCtx::~CryptoGuardCtx() {}
 } // namespace CryptoGuard
